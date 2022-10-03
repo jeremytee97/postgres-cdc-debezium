@@ -7,9 +7,8 @@
         "database.port": "5432",
         "database.user": "postgresuser",
         "database.password": "postgrespw",
-        "database.dbname" : "shipment_db",
+        "database.dbname": "shipment_db",
         "database.server.name": "postgres",
-        "table.include.list": "public.sales_target",
-        "schema.refresh.mode": "columns_diff_exclude_unchanged_toast"
-        }
+        "table.include.list": "public.sales_target"
+    }
 }
