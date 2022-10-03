@@ -15,6 +15,9 @@ with the current version of `wal2json`, toasted values are ignored.
 - https://github.com/eulerto/wal2json/issues/98
 
 ## How to setup?
+Note: for this, i would recommend to use `JSON` over `AVRO` as you can eyeball easier, but up to you. 
+
+
 1. Host services in background
 ```
 docker-compose up -d
