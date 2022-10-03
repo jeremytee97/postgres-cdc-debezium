@@ -14,6 +14,30 @@ with the current version of `wal2json`, toasted values are ignored.
 - https://github.com/debezium/debezium/pull/790
 - https://github.com/eulerto/wal2json/issues/98
 
+## How to setup?
+1. Host services in background
+```
+docker-compose up -d
+```
+2. Connect debezium to postgresql
+```
+curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" http://localhost:8083/connectors/ -d @register-postgres.json
+```
+3. Access the postgres (to make changes)
+```
+docker exec -ti snl-debezium_postgres_1 psql -U postgresuser -d shipment_db
+```
+4. Open a new tab, and monitor kafka output
+```
+docker run --tty \
+--network snl-debezium_default \
+confluentinc/cp-kafkacat \
+kafkacat -b kafka:9092 -C \
+-s key=s -s value=avro \
+-r http://schema-registry:8081 \
+-t postgres.public.sales_target
+```
+
 
 ## How to replicate this?
 With default settings
@@ -30,6 +54,7 @@ INSERT INTO public.sales_target (sale_value, biography) VALUES (1, (SELECT array
     'updated_at': 1663951227410675'
 }
 
+
 UPDATE public.sales_target 
 set sale_value  = 2
 where id = 4;
@@ -44,7 +69,7 @@ where id = 4;
 
 ```
 
-With `"schema.refresh.mode":"columns_diff_exclude_unchanged_toast"`
+Add `"schema.refresh.mode":"columns_diff_exclude_unchanged_toast"` into register-postgres.json and rerun everything again, you will notice for the update statement, `biography` column exists.
 ```
 {
     'id': 4,
